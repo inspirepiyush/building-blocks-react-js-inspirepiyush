@@ -35,7 +35,7 @@
     "configDeps": "cp -a ../../node_modules/@pdftron/webviewer/public/. ./public/lib",
     "compile": "yarn configDeps && tsc -b",
     "prestart": "npm run compile",
-    "start": "concurrently \"npm run compile -- -w --incremental\" \"HTTPS=true npm run _start\"",
+    "start": "concurrently \"npm run compile -- -w --incremental\" \"HTTPS=true npm run _start\"",  
     "windows_start": "concurrently \"npm run compile -- -w --incremental\" \"npm run _start\"",
     "_start": "react-app-rewired start",
     "prebuild": "npm run compile",

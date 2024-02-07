@@ -47,7 +47,7 @@ import CancellationOfCall from "../../blocks/CancellationOfCall/src/Cancellation
 import History5 from "../../blocks/History5/src/History5";
 import Referrals from "../../blocks/Referrals/src/Referrals";
 import AdminConsole3 from "../../blocks/AdminConsole3/src/AdminConsole3";
-import 3rdPartyAudioAndVideoIntergration from "../../blocks/3rdPartyAudioAndVideoIntergration/src/3rdPartyAudioAndVideoIntergration";
+// import 3rdPartyAudioAndVideoIntergration from "../../blocks/3rdPartyAudioAndVideoIntergration/src/3rdPartyAudioAndVideoIntergration";
 import Settings5 from "../../blocks/Settings5/src/Settings5";
 import UserProfileBasicBlock from "../../blocks/user-profile-basic/src/UserProfileBasicBlock";
 import Categoriessubcategories from "../../blocks/categoriessubcategories/src/Categoriessubcategories";
@@ -187,9 +187,9 @@ path:"/Referrals"},
 AdminConsole3:{
  component:AdminConsole3,
 path:"/AdminConsole3"},
-3rdPartyAudioAndVideoIntergration:{
- component:3rdPartyAudioAndVideoIntergration,
-path:"/3rdPartyAudioAndVideoIntergration"},
+// 3rdPartyAudioAndVideoIntergration:{
+//  component:3rdPartyAudioAndVideoIntergration,
+// path:"/3rdPartyAudioAndVideoIntergration"},
 Settings5:{
  component:Settings5,
 path:"/Settings5"},
