@@ -8,6 +8,7 @@ import { runEngine } from "../../../framework/src/RunEngine";
 
 // Customizable Area Start
 import { imgPasswordInVisible, imgPasswordVisible } from "./assets";
+import { log } from "console";
 // Customizable Area End
 
 export const configJSON = require("./config");
@@ -20,9 +21,9 @@ export interface Props {
 }
 
 interface S {
-  txtInputValue: string;
-  txtSavedValue: string;
-  enableField: boolean;
+  email : string;
+  password : string;
+  loginSuccess: boolean
   // Customizable Area Start
   // Customizable Area End
 }
@@ -53,9 +54,10 @@ export default class History5Controller extends BlockComponent<
     ];
 
     this.state = {
-      txtInputValue: "",
-      txtSavedValue: "A",
-      enableField: false,
+    
+      email: "",
+      password: "",
+      loginSuccess:  false,
       // Customizable Area Start
       // Customizable Area End
     };
@@ -64,80 +66,70 @@ export default class History5Controller extends BlockComponent<
     // Customizable Area Start
     // Customizable Area End
   }
-
+  loginApiCallID = "";
+  //This is to receive the response from an api
   async receive(from: string, message: Message) {
-    runEngine.debugLog("Message Recived", message);
-
-    if (message.id === getName(MessageEnum.AccoutLoginSuccess)) {
-      let value = message.getData(getName(MessageEnum.AuthTokenDataMessage));
-
-      this.showAlert(
-        "Change Value",
-        "From: " + this.state.txtSavedValue + " To: " + value
-      );
-
-      this.setState({ txtSavedValue: value });
-    }
-
     // Customizable Area Start
-    // Customizable Area End
+    if (getName(MessageEnum.RestAPIResponceMessage) === message.id) {
+      const apiRequestCallId = message.getData(
+        getName(MessageEnum.RestAPIResponceDataMessage)
+      );
+      var responseJson = message.getData(
+        getName(MessageEnum.RestAPIResponceSuccessMessage)
+      );
+      var errorReponse = message.getData(
+        getName(MessageEnum.RestAPIResponceErrorMessage)
+      );
+      if (apiRequestCallId === this.loginApiCallID) {
+        console.log(responseJson);
+        if(responseJson?.success == true){
+
+        }else{
+          
+        }
+      }
+    }
   }
-
-  txtInputWebProps = {
-    onChangeText: (text: string) => {
-      this.setState({ txtInputValue: text });
-    },
-    secureTextEntry: false,
-  };
-
-  txtInputMobileProps = {
-    ...this.txtInputWebProps,
-    autoCompleteType: "email",
-    keyboardType: "email-address",
-  };
-
-  txtInputProps = this.isPlatformWeb()
-    ? this.txtInputWebProps
-    : this.txtInputMobileProps;
-
-  btnShowHideProps = {
-    onPress: () => {
-      this.setState({ enableField: !this.state.enableField });
-      this.txtInputProps.secureTextEntry = !this.state.enableField;
-      this.btnShowHideImageProps.source = this.txtInputProps.secureTextEntry
-        ? imgPasswordVisible
-        : imgPasswordInVisible;
-    },
-  };
-
-  btnShowHideImageProps = {
-    source: this.txtInputProps.secureTextEntry
-      ? imgPasswordVisible
-      : imgPasswordInVisible,
-  };
-
-  btnExampleProps = {
-    onPress: () => this.doButtonPressed(),
-  };
-
-  doButtonPressed() {
-    let msg = new Message(getName(MessageEnum.AccoutLoginSuccess));
-    msg.addData(
-      getName(MessageEnum.AuthTokenDataMessage),
-      this.state.txtInputValue
+  apiCall = () => {
+    const header = {
+      "Content-Type": configJSON.validationApiContentType,
+    };
+    const requestMessage = new Message(
+      getName(MessageEnum.RestAPIRequestMessage) // do not change this
     );
-    this.send(msg);
-  }
-
-  // web events
-  setInputValue = (text: string) => {
-    this.setState({ txtInputValue: text });
+    this.loginApiCallID = requestMessage.messageId;
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIResponceEndPointMessage),
+      configJSON.exampleAPiEndPoint
+    );
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestHeaderMessage),
+      JSON.stringify(header)
+    );
+    const attrs = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestBodyMessage),
+      JSON.stringify(attrs)
+    );
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestMethodMessage),
+      configJSON.exampleAPiMethodPost
+    );
+    runEngine.sendMessage(requestMessage.id, requestMessage);
   };
-
-  setEnableField = () => {
-    this.setState({ enableField: !this.state.enableField });
-  };
-
   // Customizable Area Start
+  handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    this.apiCall();
+    if (this.state.email && this.state.password) {
+      // Set loginSuccess to true and open the modal
+      this.setState({ loginSuccess: true });
+    }
+  };
   // Customizable Area End
 }
+  // Customizable Area End
+

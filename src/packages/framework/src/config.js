@@ -1,7 +1,8 @@
 "use strict";
 
 
-const baseURL = "__MARKER_FOR_BACKEND_URL_REPLACEMENT";
+// const baseURL = "https://reqres.in/";
+const baseURL = "https://api.nasa.gov";
 
 Object.defineProperty(exports, "__esModule", {
   value: true

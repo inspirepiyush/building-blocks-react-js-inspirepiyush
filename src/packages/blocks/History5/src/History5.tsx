@@ -77,66 +77,7 @@ export default class History5 extends History5Controller {
     // Customizable Area Start
     // Merge Engine - render - Start
     return (
-      <ScrollView keyboardShouldPersistTaps="always" style={styles.container}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            this.hideKeyboard();
-          }}
-        >
-          <View>
-            {this.isPlatformWeb() ? (
-              <Text
-                testID="labelTitle" //Merge Engine::From BDS
-                style={styles.title} //UI Engine::From Sketch
-              >
-                {configJSON.labelTitleText}
-              </Text> //UI Engine::From Sketch
-            ) : null}
-
-            <Text
-              testID="labelBody" //Merge Engine::From BDS
-              style={styles.body} //UI Engine::From Sketch
-            >
-              {" "}
-              {/* UI Engine::From Sketch */}
-              {configJSON.labelBodyText} {/* UI Engine::From Sketch */}
-            </Text>
-
-            <Text testID="txtSaved">
-              This is the reviced value:
-              {this.state.txtSavedValue}{" "}
-              {/* Merge Engine::From BDS - {...this.testIDValue} */}
-            </Text>
-
-            <View style={styles.bgPasswordContainer}>
-              <TextInput
-                testID="txtInput" //Merge Engine::From BDS
-                style={styles.bgMobileInput} //UI Engine::From Sketch
-                placeholder={configJSON.txtInputPlaceholder} //UI Engine::From Sketch
-                {...this.txtInputProps} //Merge Engine::From BDS - {...this.testIDProps}
-              />
-
-              <TouchableOpacity
-                testID={"btnShowHide"} //Merge Engine::From BDS
-                style={styles.showHide} //UI Engine::From Sketch
-                {...this.btnShowHideProps} //Merge Engine::From BDS - {...this.testIDProps}
-              >
-                <Image
-                  testID={"btnShowHideImage"} //Merge Engine::From BDS - testIDImage
-                  style={styles.imgShowhide} //UI Engine::From Sketch
-                  {...this.btnShowHideImageProps} //Merge Engine::From BDS - {...this.testIDProps}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Button
-              testID={"btnExample"} //Merge Engine::From BDS
-              title={configJSON.btnExampleTitle} //UI Engine::From Sketch
-              {...this.btnExampleProps} //Merge Engine::From BDS - {...this.testIDProps}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-      </ScrollView>
+      <> </>
     );
     // Merge Engine - render - End
     // Customizable Area End

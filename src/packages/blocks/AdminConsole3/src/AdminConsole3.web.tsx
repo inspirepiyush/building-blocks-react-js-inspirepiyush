@@ -9,6 +9,11 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   // Customizable Area Start
   // Customizable Area End
 } from "@material-ui/core";
@@ -56,49 +61,33 @@ export default class AdminConsole3 extends AdminConsole3Controller {
       // Customizable Area Start
       <ThemeProvider theme={theme}>
         <Container maxWidth={"sm"}>
-          <Box sx={webStyle.mainWrapper}>
-            <Typography variant="h6">{configJSON.labelTitleText}</Typography>
-            <Typography variant="subtitle1" component="div">
-              {configJSON.labelBodyText}
-            </Typography>
-            <Box sx={webStyle.inputStyle}>
-              <InputLabel id="service-shop-name">
-                This is the reviced value:{this.state.txtSavedValue}{" "}
-              </InputLabel>
-              <Input
-                data-test-id={"txtInput"}
-                type={this.state.enableField ? "password" : "text"}
-                placeholder={configJSON.txtInputPlaceholder}
-                fullWidth={true}
-                disableUnderline={true}
-                value={this.state.txtInputValue}
-                onChange={(e) => this.setInputValue(e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={this.setEnableField}
-                      edge="end"
-                    >
-                      {this.state.enableField ? (
-                        <Visibility />
-                      ) : (
-                        <VisibilityOff />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </Box>
-            <Box
-              data-test-id="btnAddExample"
-              onClick={() => this.doButtonPressed()}
-              component="button"
-              sx={webStyle.buttonStyle}
-            >
-              <Button color={"primary"}>{configJSON.btnExampleTitle}</Button>
-            </Box>
+{/* _____________________________________________________________________________________________ */}
+          <Box>
+            <Button variant="contained" onClick={this.handleApi}>NASA API</Button>
           </Box>
+
+           {/* Modal for successful API hit */}
+           <Dialog
+            open={this.state.ApiSuccess}
+            onClose={() => {this.setState({ApiSuccess : false})}}
+          >
+            <DialogTitle>Explanation</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                You have successfully logged in!
+                {this.state.explanation}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                color="primary"
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+{/* _____________________________________________________________________________________________ */}
+
         </Container>
       </ThemeProvider>
       // Customizable Area End

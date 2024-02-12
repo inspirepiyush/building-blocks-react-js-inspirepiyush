@@ -3,20 +3,20 @@ import React from "react";
 import {
   Container,
   Box,
-  Input,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  TextField,
   Button,
-  InputLabel,
   Typography,
-  InputAdornment,
-  IconButton,
   // Customizable Area Start
   // Customizable Area End
 } from "@material-ui/core";
 
 // Customizable Area Start
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Visibility from "@material-ui/icons/Visibility";
 
 const theme = createTheme({
   palette: {
@@ -36,10 +36,7 @@ const theme = createTheme({
 });
 // Customizable Area End
 
-import History5Controller, {
-  Props,
-  configJSON,
-} from "./History5Controller";
+import History5Controller, { Props, configJSON } from "./History5Controller";
 
 export default class History5 extends History5Controller {
   constructor(props: Props) {
@@ -61,46 +58,49 @@ export default class History5 extends History5Controller {
             <Typography variant="subtitle1" component="div">
               {configJSON.labelBodyText}
             </Typography>
-            <Box sx={webStyle.inputStyle}>
-              <InputLabel id="service-shop-name">
-                This is the reviced value:{this.state.txtSavedValue}{" "}
-              </InputLabel>
-              <Input
-                data-test-id={"txtInput"}
-                type={this.state.enableField ? "password" : "text"}
-                placeholder={configJSON.txtInputPlaceholder}
-                fullWidth={true}
-                disableUnderline={true}
-                value={this.state.txtInputValue}
-                onChange={(e) => this.setInputValue(e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={this.setEnableField}
-                      edge="end"
-                    >
-                      {this.state.enableField ? (
-                        <Visibility />
-                      ) : (
-                        <VisibilityOff />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </Box>
-            <Box
-              data-test-id="btnAddExample"
-              onClick={() => this.doButtonPressed()}
-              component="button"
-              sx={webStyle.buttonStyle}
-            >
-              <Button color={"primary"}>{configJSON.btnExampleTitle}</Button>
-            </Box>
+            {/* Form with email, password inputs */}
+            <form onClick={this.handleLogin}>
+              <Box sx={webStyle.inputStyle}>
+                <TextField
+                  label="Email"
+                  fullWidth
+                  value={this.state.email}
+                  onChange={(e) => this.setState({ email: e.target.value })}
+                />
+                <TextField
+                  label="Password"
+                  type="password"
+                  fullWidth
+                  value={this.state.password}
+                  onChange={(e) => this.setState({ password: e.target.value })}
+                />
+              </Box>
+              <Box sx={webStyle.buttonStyle}>
+                <Button color={"primary"} type="submit">
+                  {configJSON.btnExampleTitle}
+                </Button>
+              </Box>
+            </form>
           </Box>
+          {/* Modal for successful login */}
+          <Dialog
+            open={this.state.loginSuccess}
+            onClose={() => this.setState({ loginSuccess: false })}
+          >
+            <DialogTitle>Login Successful</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                You have successfully logged in!
+              </DialogContentText>
+              <DialogContentText>email :{this.state.email}</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary">Close</Button>
+            </DialogActions>
+          </Dialog>
         </Container>
       </ThemeProvider>
+
       // Customizable Area End
     );
   }

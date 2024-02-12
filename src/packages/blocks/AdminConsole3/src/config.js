@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 // Customizable Area Start
 exports.validationApiContentType = "application/json";
 exports.validationApiMethodType = "GET";
-exports.exampleAPiEndPoint = "EXAMPLE_URL";
+exports.exampleAPiEndPoint = "planetary/apod?api_key=rFcRaU3ywadMthQS967d1wpgLs4AZNedu8wtHRrv";
 exports.exampleAPiMethod = "POST";
 exports.exampleApiContentType = "application/json";
 exports.textInputPlaceHolder = "Enter Text";

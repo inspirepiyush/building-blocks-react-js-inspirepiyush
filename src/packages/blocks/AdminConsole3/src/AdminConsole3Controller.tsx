@@ -8,6 +8,8 @@ import { runEngine } from "../../../framework/src/RunEngine";
 
 // Customizable Area Start
 import { imgPasswordInVisible, imgPasswordVisible } from "./assets";
+import { string } from "yup";
+import { log } from "console";
 // Customizable Area End
 
 export const configJSON = require("./config");
@@ -23,7 +25,10 @@ interface S {
   txtInputValue: string;
   txtSavedValue: string;
   enableField: boolean;
+
   // Customizable Area Start
+  explanation: string;
+  ApiSuccess: boolean;
   // Customizable Area End
 }
 
@@ -47,9 +52,8 @@ export default class AdminConsole3Controller extends BlockComponent<
 
     // Customizable Area Start
     this.subScribedMessages = [
-      getName(MessageEnum.AccoutLoginSuccess),
-      // Customizable Area Start
-      // Customizable Area End
+      getName(MessageEnum.RestAPIResponceMessage),
+      getName(MessageEnum.NavigationPayLoadMessage),
     ];
 
     this.state = {
@@ -57,87 +61,81 @@ export default class AdminConsole3Controller extends BlockComponent<
       txtSavedValue: "A",
       enableField: false,
       // Customizable Area Start
+      explanation : "",
+      ApiSuccess : false
       // Customizable Area End
     };
     runEngine.attachBuildingBlock(this as IBlock, this.subScribedMessages);
-
     // Customizable Area Start
     // Customizable Area End
   }
 
+  callID ="";
+
   async receive(from: string, message: Message) {
-    runEngine.debugLog("Message Recived", message);
 
-    if (message.id === getName(MessageEnum.AccoutLoginSuccess)) {
-      let value = message.getData(getName(MessageEnum.AuthTokenDataMessage));
-
-      this.showAlert(
-        "Change Value",
-        "From: " + this.state.txtSavedValue + " To: " + value
+    if (getName(MessageEnum.RestAPIResponceMessage) === message.id) {
+      const apiRequestCallId = message.getData(
+        getName(MessageEnum.RestAPIResponceDataMessage)
       );
-
-      this.setState({ txtSavedValue: value });
+      var responseJson = message.getData(
+        getName(MessageEnum.RestAPIResponceSuccessMessage)
+      );
+      var errorReponse = message.getData(
+        getName(MessageEnum.RestAPIResponceErrorMessage)
+      );
+      if (apiRequestCallId === this.callID) {
+        console.log('h',responseJson);
+        console.log("copyright", responseJson.copyright);
+        // this.setState({
+        //   copyright: responseJson.copyright;
+        // })
+      }
     }
 
     // Customizable Area Start
     // Customizable Area End
   }
 
-  txtInputWebProps = {
-    onChangeText: (text: string) => {
-      this.setState({ txtInputValue: text });
-    },
-    secureTextEntry: false,
-  };
-
-  txtInputMobileProps = {
-    ...this.txtInputWebProps,
-    autoCompleteType: "email",
-    keyboardType: "email-address",
-  };
-
-  txtInputProps = this.isPlatformWeb()
-    ? this.txtInputWebProps
-    : this.txtInputMobileProps;
-
-  btnShowHideProps = {
-    onPress: () => {
-      this.setState({ enableField: !this.state.enableField });
-      this.txtInputProps.secureTextEntry = !this.state.enableField;
-      this.btnShowHideImageProps.source = this.txtInputProps.secureTextEntry
-        ? imgPasswordVisible
-        : imgPasswordInVisible;
-    },
-  };
-
-  btnShowHideImageProps = {
-    source: this.txtInputProps.secureTextEntry
-      ? imgPasswordVisible
-      : imgPasswordInVisible,
-  };
-
-  btnExampleProps = {
-    onPress: () => this.doButtonPressed(),
-  };
-
-  doButtonPressed() {
-    let msg = new Message(getName(MessageEnum.AccoutLoginSuccess));
-    msg.addData(
-      getName(MessageEnum.AuthTokenDataMessage),
-      this.state.txtInputValue
+  apiCall = () => {
+    console.log("api call");
+    const header = {
+      "Content-Type": configJSON.validationApiContentType,
+    };
+    const requestMessage = new Message(
+      getName(MessageEnum.RestAPIRequestMessage) // do not change this
     );
-    this.send(msg);
-  }
-
-  // web events
-  setInputValue = (text: string) => {
-    this.setState({ txtInputValue: text });
+    this.callID = requestMessage.messageId;
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIResponceEndPointMessage),
+      configJSON.exampleAPiEndPoint
+    );
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestHeaderMessage),
+      JSON.stringify(header)
+    );
+    // const attrs = {
+    //   explanation : "",
+    // };
+    // requestMessage.addData(
+    //   getName(MessageEnum.RestAPIRequestBodyMessage),
+    //   JSON.stringify(attrs)
+    // );
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestMethodMessage),
+      configJSON.validationApiMethodType
+    );
+    runEngine.sendMessage(requestMessage.id, requestMessage);
   };
 
-  setEnableField = () => {
-    this.setState({ enableField: !this.state.enableField });
-  };
-
+ 
   // Customizable Area Start
+  
+  handleApi=() => {
+    console.log("btn-clicked");
+    // console.log(this.state.explanation);
+    this.apiCall()
+    this.setState({ApiSuccess: true})
+  }
   // Customizable Area End
 }
