@@ -8,6 +8,7 @@ import { runEngine } from "../../../framework/src/RunEngine";
 
 // Customizable Area Start
 import { imgPasswordInVisible, imgPasswordVisible } from "./assets";
+import { log } from "console";
 // Customizable Area End
 
 export const configJSON = require("./config");
@@ -24,6 +25,9 @@ interface S {
   txtSavedValue: string;
   enableField: boolean;
   // Customizable Area Start
+
+  name: string;
+  email: string;
   // Customizable Area End
 }
 
@@ -57,6 +61,8 @@ export default class PaymentsController extends BlockComponent<
       txtSavedValue: "A",
       enableField: false,
       // Customizable Area Start
+      name : "",
+      email : "",
       // Customizable Area End
     };
     runEngine.attachBuildingBlock(this as IBlock, this.subScribedMessages);
@@ -65,23 +71,66 @@ export default class PaymentsController extends BlockComponent<
     // Customizable Area End
   }
 
+  callId = ""
+
   async receive(from: string, message: Message) {
-    runEngine.debugLog("Message Recived", message);
-
-    if (message.id === getName(MessageEnum.AccoutLoginSuccess)) {
-      let value = message.getData(getName(MessageEnum.AuthTokenDataMessage));
-
-      this.showAlert(
-        "Change Value",
-        "From: " + this.state.txtSavedValue + " To: " + value
+    if (getName(MessageEnum.RestAPIResponceMessage) === message.id) {
+      const apiRequestCallId = message.getData(
+        getName(MessageEnum.RestAPIResponceDataMessage)
       );
+      var responseJson = message.getData(
+        getName(MessageEnum.RestAPIResponceSuccessMessage)
+      );
+      var errorReponse = message.getData(
+        getName(MessageEnum.RestAPIResponceErrorMessage)
+      );
+      if (apiRequestCallId === this.callId) {
+        console.log('response gathered',);
+        this.setState({
+          name: "",
+          email :"",
+        })
+        console.log(responseJson)
 
-      this.setState({ txtSavedValue: value });
+        
+      }
     }
-
-    // Customizable Area Start
-    // Customizable Area End
   }
+
+  apiCall = () => {
+    console.log("api call");
+    const header = {
+      "Content-Type": configJSON.validationApiContentType,
+    };
+    const requestMessage = new Message(
+      getName(MessageEnum.RestAPIRequestMessage) // do not change this
+    );
+    this.callId = requestMessage.messageId;
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIResponceEndPointMessage),
+      configJSON.exampleAPiEndPoint
+    );
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestHeaderMessage),
+      JSON.stringify(header)
+    );
+    const attri = {
+      name: this.state.name,
+          email : this.state.email,
+    }
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestBodyMessage),
+      JSON.stringify(attri)
+    )
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestMethodMessage),
+      configJSON.validationApiMethodType
+    );
+    runEngine.sendMessage(requestMessage.id, requestMessage);
+  };
+
+
+
 
   txtInputWebProps = {
     onChangeText: (text: string) => {
@@ -109,6 +158,7 @@ export default class PaymentsController extends BlockComponent<
         : imgPasswordInVisible;
     },
   };
+
 
   btnShowHideImageProps = {
     source: this.txtInputProps.secureTextEntry
@@ -139,5 +189,12 @@ export default class PaymentsController extends BlockComponent<
   };
 
   // Customizable Area Start
+
+  handleSubmit = () => {
+    console.log("Submit-btn-clicked");
+    this.apiCall()
+
+    
+  }
   // Customizable Area End
 }

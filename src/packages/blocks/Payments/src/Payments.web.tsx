@@ -36,10 +36,7 @@ const theme = createTheme({
 });
 // Customizable Area End
 
-import PaymentsController, {
-  Props,
-  configJSON,
-} from "./PaymentsController";
+import PaymentsController, { Props, configJSON } from "./PaymentsController";
 
 export default class Payments extends PaymentsController {
   constructor(props: Props) {
@@ -57,46 +54,24 @@ export default class Payments extends PaymentsController {
       <ThemeProvider theme={theme}>
         <Container maxWidth={"sm"}>
           <Box sx={webStyle.mainWrapper}>
-            <Typography variant="h6">{configJSON.labelTitleText}</Typography>
-            <Typography variant="subtitle1" component="div">
-              {configJSON.labelBodyText}
-            </Typography>
+            <Typography> Create user: </Typography>
             <Box sx={webStyle.inputStyle}>
-              <InputLabel id="service-shop-name">
-                This is the reviced value:{this.state.txtSavedValue}{" "}
-              </InputLabel>
-              <Input
-                data-test-id={"txtInput"}
-                type={this.state.enableField ? "password" : "text"}
-                placeholder={configJSON.txtInputPlaceholder}
-                fullWidth={true}
-                disableUnderline={true}
-                value={this.state.txtInputValue}
-                onChange={(e) => this.setInputValue(e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={this.setEnableField}
-                      edge="end"
-                    >
-                      {this.state.enableField ? (
-                        <Visibility />
-                      ) : (
-                        <VisibilityOff />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
+              <InputLabel>enter name :</InputLabel>
+              <Input onChange={(e) => this.setState({name : e.target.value})} />
+              <InputLabel>enter email :</InputLabel>
+              <Input onChange={(e) => this.setState({email : e.target.value})} />
             </Box>
-            <Box
+            {/* <Box
               data-test-id="btnAddExample"
               onClick={() => this.doButtonPressed()}
               component="button"
               sx={webStyle.buttonStyle}
             >
               <Button color={"primary"}>{configJSON.btnExampleTitle}</Button>
+            </Box> */}
+
+            <Box>
+              <Button variant="contained" onClick={this.handleSubmit}>Submit</Button>
             </Box>
           </Box>
         </Container>
