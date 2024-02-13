@@ -9,6 +9,7 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -61,33 +62,34 @@ export default class AdminConsole3 extends AdminConsole3Controller {
       // Customizable Area Start
       <ThemeProvider theme={theme}>
         <Container maxWidth={"sm"}>
-{/* _____________________________________________________________________________________________ */}
+          {/* _____________________________________________________________________________________________ */}
           <Box>
-            <Button variant="contained" onClick={this.handleApi}>NASA API</Button>
+            <Button variant="contained" onClick={this.handleApi}>
+              NASA API
+            </Button>
           </Box>
 
-           {/* Modal for successful API hit */}
-           <Dialog
+          {/* Modal for successful API hit */}
+          <Dialog
             open={this.state.ApiSuccess}
-            onClose={() => {this.setState({ApiSuccess : false})}}
+            onClose={() => {
+              this.setState({ ApiSuccess: false });
+            }}
           >
             <DialogTitle>Explanation</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                You have successfully logged in!
-                {this.state.explanation}
+                Explanation :
+              </DialogContentText>
+              <DialogContentText>
+              {this.state.isLoading ? <h5><CircularProgress color="secondary" /></h5> : this.state.explanation}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button
-                color="primary"
-              >
-                Close
-              </Button>
+              <Button color="primary">Close</Button>
             </DialogActions>
           </Dialog>
-{/* _____________________________________________________________________________________________ */}
-
+          {/* _____________________________________________________________________________________________ */}
         </Container>
       </ThemeProvider>
       // Customizable Area End

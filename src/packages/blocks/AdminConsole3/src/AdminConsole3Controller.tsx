@@ -29,6 +29,7 @@ interface S {
   // Customizable Area Start
   explanation: string;
   ApiSuccess: boolean;
+  isLoading : boolean;
   // Customizable Area End
 }
 
@@ -62,7 +63,8 @@ export default class AdminConsole3Controller extends BlockComponent<
       enableField: false,
       // Customizable Area Start
       explanation : "",
-      ApiSuccess : false
+      ApiSuccess : false,
+      isLoading : true,
       // Customizable Area End
     };
     runEngine.attachBuildingBlock(this as IBlock, this.subScribedMessages);
@@ -85,11 +87,10 @@ export default class AdminConsole3Controller extends BlockComponent<
         getName(MessageEnum.RestAPIResponceErrorMessage)
       );
       if (apiRequestCallId === this.callID) {
-        console.log('h',responseJson);
+        console.log('response gathered',);
         console.log("copyright", responseJson.copyright);
-        // this.setState({
-        //   copyright: responseJson.copyright;
-        // })
+        this.setState({isLoading : false})
+        this.setState({explanation : responseJson.explanation})
       }
     }
 
@@ -114,13 +115,6 @@ export default class AdminConsole3Controller extends BlockComponent<
       getName(MessageEnum.RestAPIRequestHeaderMessage),
       JSON.stringify(header)
     );
-    // const attrs = {
-    //   explanation : "",
-    // };
-    // requestMessage.addData(
-    //   getName(MessageEnum.RestAPIRequestBodyMessage),
-    //   JSON.stringify(attrs)
-    // );
     requestMessage.addData(
       getName(MessageEnum.RestAPIRequestMethodMessage),
       configJSON.validationApiMethodType
