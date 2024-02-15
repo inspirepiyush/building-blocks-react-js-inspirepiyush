@@ -9,9 +9,20 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  Table,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper,
+  Link,
   // Customizable Area Start
   // Customizable Area End
 } from "@material-ui/core";
+
+
+
 
 // Customizable Area Start
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
@@ -36,22 +47,24 @@ const theme = createTheme({
 });
 // Customizable Area End
 
-import ReferralsController, {
-  Props,
-  configJSON,
-} from "./ReferralsController";
+import ReferralsController, { Props, configJSON } from "./ReferralsController";
 
 export default class Referrals extends ReferralsController {
   constructor(props: Props) {
     super(props);
     // Customizable Area Start
     // Customizable Area End
+    // this.state{
+    //   results:[]
+    // }
   }
 
   // Customizable Area Start
   // Customizable Area End
 
   render() {
+    const { results } = this.state;
+
     return (
       // Customizable Area Start
       <ThemeProvider theme={theme}>
@@ -61,7 +74,7 @@ export default class Referrals extends ReferralsController {
             <Typography variant="subtitle1" component="div">
               {configJSON.labelBodyText}
             </Typography>
-            <Box sx={webStyle.inputStyle}>
+            {/* <Box sx={webStyle.inputStyle}>
               <InputLabel id="service-shop-name">
                 This is the reviced value:{this.state.txtSavedValue}{" "}
               </InputLabel>
@@ -89,14 +102,54 @@ export default class Referrals extends ReferralsController {
                   </InputAdornment>
                 }
               />
-            </Box>
-            <Box
+            </Box> */}
+            {/* <Box
               data-test-id="btnAddExample"
               onClick={() => this.doButtonPressed()}
               component="button"
               sx={webStyle.buttonStyle}
             >
               <Button color={"primary"}>{configJSON.btnExampleTitle}</Button>
+            </Box> */}
+
+            <Box>
+              <Button onClick={this.handleApi}>Get Pokemons</Button>
+            </Box>
+
+
+            <Box>
+           <Button onClick={this.getMorePokemon}>get more pokemon</Button>
+            </Box>
+
+            <Box>
+         
+
+            </Box>
+            
+            <Box>
+              {/* {this.state.results} */}
+              {/* <h1>this is content</h1>
+               {this.state.results.map((data) => (
+                <Typography>{JSON.stringify(this.state.results.name)}</Typography>
+                ))}
+               <h1>this is content</h1> */}
+
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {results.map((item) => (
+                      <TableRow key={item}>
+                        <TableCell>{item.name}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Box>
           </Box>
         </Container>

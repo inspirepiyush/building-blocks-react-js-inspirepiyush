@@ -24,6 +24,11 @@ interface S {
   txtSavedValue: string;
   enableField: boolean;
   // Customizable Area Start
+  results: string[] ;
+  name : string;
+  offset: number;
+  
+
   // Customizable Area End
 }
 
@@ -47,9 +52,8 @@ export default class ReferralsController extends BlockComponent<
 
     // Customizable Area Start
     this.subScribedMessages = [
-      getName(MessageEnum.AccoutLoginSuccess),
-      // Customizable Area Start
-      // Customizable Area End
+      getName(MessageEnum.RestAPIResponceMessage),
+      getName(MessageEnum.NavigationPayLoadMessage),
     ];
 
     this.state = {
@@ -57,6 +61,10 @@ export default class ReferralsController extends BlockComponent<
       txtSavedValue: "A",
       enableField: false,
       // Customizable Area Start
+      results: [],
+      name: "",
+      offset: 10,
+      
       // Customizable Area End
     };
     runEngine.attachBuildingBlock(this as IBlock, this.subScribedMessages);
@@ -65,79 +73,133 @@ export default class ReferralsController extends BlockComponent<
     // Customizable Area End
   }
 
+  callId: string = "";
+
   async receive(from: string, message: Message) {
-    runEngine.debugLog("Message Recived", message);
 
-    if (message.id === getName(MessageEnum.AccoutLoginSuccess)) {
-      let value = message.getData(getName(MessageEnum.AuthTokenDataMessage));
-
-      this.showAlert(
-        "Change Value",
-        "From: " + this.state.txtSavedValue + " To: " + value
+    if (getName(MessageEnum.RestAPIResponceMessage) === message.id) {
+      const apiRequestCallId = message.getData(
+        getName(MessageEnum.RestAPIResponceDataMessage)
       );
-
-      this.setState({ txtSavedValue: value });
+      var responseJson = message.getData(
+        getName(MessageEnum.RestAPIResponceSuccessMessage)
+      );
+      var errorReponse = message.getData(
+        getName(MessageEnum.RestAPIResponceErrorMessage)
+      );
+      if (apiRequestCallId === this.callId) {
+        console.log('response gathered');
+        // console.log(JSON.stringify(responseJson));
+        console.log(responseJson.results);
+        this.setState({results : responseJson.results})
+        
+        
+      }
     }
 
     // Customizable Area Start
     // Customizable Area End
   }
 
-  txtInputWebProps = {
-    onChangeText: (text: string) => {
-      this.setState({ txtInputValue: text });
-    },
-    secureTextEntry: false,
-  };
+  // txtInputWebProps = {
+  //   onChangeText: (text: string) => {
+  //     this.setState({ txtInputValue: text });
+  //   },
+  //   secureTextEntry: false,
+  // };
 
-  txtInputMobileProps = {
-    ...this.txtInputWebProps,
-    autoCompleteType: "email",
-    keyboardType: "email-address",
-  };
+  // txtInputMobileProps = {
+  //   ...this.txtInputWebProps,
+  //   autoCompleteType: "email",
+  //   keyboardType: "email-address",
+  // };
 
-  txtInputProps = this.isPlatformWeb()
-    ? this.txtInputWebProps
-    : this.txtInputMobileProps;
+  // txtInputProps = this.isPlatformWeb()
+  //   ? this.txtInputWebProps
+  //   : this.txtInputMobileProps;
 
-  btnShowHideProps = {
-    onPress: () => {
-      this.setState({ enableField: !this.state.enableField });
-      this.txtInputProps.secureTextEntry = !this.state.enableField;
-      this.btnShowHideImageProps.source = this.txtInputProps.secureTextEntry
-        ? imgPasswordVisible
-        : imgPasswordInVisible;
-    },
-  };
+  // btnShowHideProps = {
+  //   onPress: () => {
+  //     this.setState({ enableField: !this.state.enableField });
+  //     this.txtInputProps.secureTextEntry = !this.state.enableField;
+  //     this.btnShowHideImageProps.source = this.txtInputProps.secureTextEntry
+  //       ? imgPasswordVisible
+  //       : imgPasswordInVisible;
+  //   },
+  // };
 
-  btnShowHideImageProps = {
-    source: this.txtInputProps.secureTextEntry
-      ? imgPasswordVisible
-      : imgPasswordInVisible,
-  };
+  // btnShowHideImageProps = {
+  //   source: this.txtInputProps.secureTextEntry
+  //     ? imgPasswordVisible
+  //     : imgPasswordInVisible,
+  // };
 
-  btnExampleProps = {
-    onPress: () => this.doButtonPressed(),
-  };
+  // btnExampleProps = {
+  //   onPress: () => this.doButtonPressed(),
+  // };
 
-  doButtonPressed() {
-    let msg = new Message(getName(MessageEnum.AccoutLoginSuccess));
-    msg.addData(
-      getName(MessageEnum.AuthTokenDataMessage),
-      this.state.txtInputValue
+  // doButtonPressed() {
+  //   let msg = new Message(getName(MessageEnum.AccoutLoginSuccess));
+  //   msg.addData(
+  //     getName(MessageEnum.AuthTokenDataMessage),
+  //     this.state.txtInputValue
+  //   );
+  //   this.send(msg);
+  // }
+
+  // // web events
+  // setInputValue = (text: string) => {
+  //   this.setState({ txtInputValue: text });
+  // };
+
+  // setEnableField = () => {
+  //   this.setState({ enableField: !this.state.enableField });
+  // };
+
+
+  apiCall = () => {
+    console.log("api call");
+    const header = {
+      "Content-Type": configJSON.validationApiContentType,
+    };
+    const requestMessage = new Message(
+      getName(MessageEnum.RestAPIRequestMessage) // do not change this
     );
-    this.send(msg);
-  }
-
-  // web events
-  setInputValue = (text: string) => {
-    this.setState({ txtInputValue: text });
-  };
-
-  setEnableField = () => {
-    this.setState({ enableField: !this.state.enableField });
+    this.callId = requestMessage.messageId;
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIResponceEndPointMessage),
+      `${configJSON.exampleAPiEndPoint}?offset=${this.state.offset}&limit=10` // Update the API endpoint with offset and limit
+    );
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestHeaderMessage),
+      JSON.stringify(header)
+    );
+    requestMessage.addData(
+      getName(MessageEnum.RestAPIRequestMethodMessage),
+      configJSON.validationApiMethodType
+    );
+    runEngine.sendMessage(requestMessage.id, requestMessage);
   };
 
   // Customizable Area Start
+
+  
+
+  handleApi =() => {
+    console.log("btn-clicked");
+    this.apiCall()
+  }
+
+  getMorePokemon = () => {
+    console.log("getMorePokemon Clicked");
+    this.setState(
+      (prevState) => ({
+        offset: prevState.offset + 10, // Increase offset by 10 to fetch next 10 Pokemon
+      }),
+      () => this.apiCall() // Call API after updating the offset
+    );
+  };
+
+  
   // Customizable Area End
 }
