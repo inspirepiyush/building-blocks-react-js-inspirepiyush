@@ -27,7 +27,6 @@ interface S {
   results: string[] ;
   name : string;
   offset: number;
-  
 
   // Customizable Area End
 }
@@ -64,7 +63,7 @@ export default class ReferralsController extends BlockComponent<
       results: [],
       name: "",
       offset: 10,
-      
+  
       // Customizable Area End
     };
     runEngine.attachBuildingBlock(this as IBlock, this.subScribedMessages);
@@ -138,14 +137,14 @@ export default class ReferralsController extends BlockComponent<
   //   onPress: () => this.doButtonPressed(),
   // };
 
-  // doButtonPressed() {
-  //   let msg = new Message(getName(MessageEnum.AccoutLoginSuccess));
-  //   msg.addData(
-  //     getName(MessageEnum.AuthTokenDataMessage),
-  //     this.state.txtInputValue
-  //   );
-  //   this.send(msg);
-  // }
+  doButtonPressed() {
+    let msg = new Message(getName(MessageEnum.AccoutLoginSuccess));
+    msg.addData(
+      getName(MessageEnum.AuthTokenDataMessage),
+      this.state.txtInputValue
+    );
+    this.send(msg);
+  }
 
   // // web events
   // setInputValue = (text: string) => {

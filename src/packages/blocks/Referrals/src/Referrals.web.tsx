@@ -3,12 +3,8 @@ import React from "react";
 import {
   Container,
   Box,
-  Input,
   Button,
-  InputLabel,
   Typography,
-  InputAdornment,
-  IconButton,
   Table,
   TableContainer,
   TableHead,
@@ -16,18 +12,15 @@ import {
   TableCell,
   TableBody,
   Paper,
-  Link,
-  // Customizable Area Start
+   // Customizable Area Start
   // Customizable Area End
 } from "@material-ui/core";
 
-
-
-
 // Customizable Area Start
+// import Pagination from '@mui/material/Pagination';
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Visibility from "@material-ui/icons/Visibility";
+// import VisibilityOff from "@material-ui/icons/VisibilityOff";
+// import Visibility from "@material-ui/icons/Visibility";
 
 const theme = createTheme({
   palette: {
@@ -54,9 +47,6 @@ export default class Referrals extends ReferralsController {
     super(props);
     // Customizable Area Start
     // Customizable Area End
-    // this.state{
-    //   results:[]
-    // }
   }
 
   // Customizable Area Start
@@ -112,21 +102,21 @@ export default class Referrals extends ReferralsController {
               <Button color={"primary"}>{configJSON.btnExampleTitle}</Button>
             </Box> */}
 
-            <Box>
-              <Button onClick={this.handleApi}>Get Pokemons</Button>
+            <Box component="button" sx={webStyle.buttonStyle}>
+              <Button color="primary" onClick={this.handleApi}>
+                Get Pokemons
+              </Button>
             </Box>
 
-
-            <Box>
-           <Button onClick={this.getMorePokemon}>get more pokemon</Button>
+            <Box component="button" sx={webStyle.buttonStyle}>
+              <Button color="primary" onClick={this.getMorePokemon}>
+                get more pokemon
+              </Button>
             </Box>
+           
+            <Box />
 
-            <Box>
-         
-
-            </Box>
-            
-            <Box>
+            <Box sx={webStyle.tableStyle}>
               {/* {this.state.results} */}
               {/* <h1>this is content</h1>
                {this.state.results.map((data) => (
@@ -138,13 +128,13 @@ export default class Referrals extends ReferralsController {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Name</TableCell>
+                      <TableCell align="center">Name</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {results.map((item) => (
                       <TableRow key={item}>
-                        <TableCell>{item.name}</TableCell>
+                        <TableCell align="center">{item.name}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -178,11 +168,19 @@ const webStyle = {
     justifyContent: "space-between",
   },
   buttonStyle: {
-    width: "100%",
+    width: "40%",
     height: "45px",
-    marginTop: "40px",
+    marginTop: "10px",
     border: "none",
+    borderRadius: "5px",
     backgroundColor: "rgb(98, 0, 238)",
+  },
+
+  tableStyle: {
+    width: "60%",
+    marginTop: "20px",
+    align: "center",
+    alignSelf: "center",
   },
 };
 // Customizable Area End
